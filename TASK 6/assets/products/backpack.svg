@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+    <rect width="400" height="300" rx="16" fill="#1c1917"/>
+    <g transform="translate(135, 60)">
+      <path d="M 25 50 Q 65 10 105 50 L 115 150 Q 65 165 15 150 Z" fill="#292524" stroke="#78716c" stroke-width="3"/>
+      <rect x="35" y="70" width="60" height="65" rx="8" fill="#44403c"/>
+      <line x1="35" y1="90" x2="95" y2="90" stroke="#f59e0b" stroke-width="3"/>
+      <path d="M 45 10 Q 65 -5 85 10" fill="none" stroke="#a8a29e" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <text x="200" y="255" font-family="sans-serif" font-size="13" font-weight="600" fill="#fbbf24" text-anchor="middle" letter-spacing="1.5">WATERPROOF COMMUTER</text>
+  </svg>

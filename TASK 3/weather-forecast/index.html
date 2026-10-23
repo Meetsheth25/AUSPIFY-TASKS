@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Real-time responsive weather forecast application powered by Open-Meteo API. Built with HTML5, CSS3, and Vanilla JavaScript.">
+  <title>Weather Forecast - Real-time weather for your city</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Header Section -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo-area">
+          <span class="logo-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <div>
+            <h1 class="app-title">Weather Forecast</h1>
+            <p class="app-subtitle">Real-time weather for your city</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+      <!-- Search & Controls Section -->
+      <section class="search-section" aria-label="City Search">
+        <form id="searchForm" class="search-form" role="search" novalidate onsubmit="return false;">
+          <div class="input-group">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input
+              type="text"
+              id="cityInput"
+              class="city-input"
+              placeholder="Enter city name (e.g., London, Tokyo, New York)..."
+              autocomplete="off"
+              aria-label="City name"
+              required
+            >
+            <button type="button" id="clearInputBtn" class="clear-btn" aria-label="Clear search input" style="display: none;">
+              &times;
+            </button>
+          </div>
+          <button type="submit" id="searchBtn" class="btn btn-primary">
+            <span class="btn-text">Search</span>
+            <svg class="btn-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+
+        <!-- Quick Select City Pills -->
+        <div class="popular-cities" aria-label="Popular Cities">
+          <span class="popular-label">Popular:</span>
+          <div class="city-chips" id="cityChips">
+            <button type="button" class="chip-btn" data-city="London">London</button>
+            <button type="button" class="chip-btn" data-city="Tokyo">Tokyo</button>
+            <button type="button" class="chip-btn" data-city="New York">New York</button>
+            <button type="button" class="chip-btn" data-city="Paris">Paris</button>
+            <button type="button" class="chip-btn" data-city="Mumbai">Mumbai</button>
+          </div>
+        </div>
+
+        <!-- Feedback & Error Message Box -->
+        <div id="errorMessage" class="error-banner" role="alert" aria-live="polite" style="display: none;">
+          <span class="error-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </span>
+          <p id="errorText" class="error-text"></p>
+          <button type="button" id="dismissErrorBtn" class="dismiss-btn" aria-label="Dismiss error">&times;</button>
+        </div>
+
+        <!-- Loading State Indicator -->
+        <div id="loadingIndicator" class="loading-indicator" role="status" aria-live="assertive" style="display: none;">
+          <div class="spinner"></div>
+          <span class="loading-text">Fetching current weather data...</span>
+        </div>
+      </section>
+
+      <!-- Welcome State (Displayed before first search) -->
+      <section id="welcomeCard" class="welcome-card" aria-label="Welcome">
+        <div class="welcome-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="80" height="80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M46 38a14 14 0 0 0-27.6-3.2A10 10 0 0 0 8 44a10 10 0 0 0 10 10h28a12 12 0 0 0 0-24c-.7 0-1.3.1-2 .2" fill="#e0f2fe" stroke="#0284c7" />
+            <circle cx="22" cy="22" r="8" fill="#fef08a" stroke="#ca8a04" />
+          </svg>
+        </div>
+        <h2 class="welcome-title">Ready for Your Local Forecast?</h2>
+        <p class="welcome-desc">Enter any city above or tap one of the popular city buttons to view real-time meteorological conditions and an accurate 5-day forecast.</p>
+      </section>
+
+      <!-- Weather Dashboard (Populated with live data) -->
+      <div id="weatherDashboard" class="weather-dashboard" style="display: none;">
+        <!-- Top Toolbar with Current City & Refresh -->
+        <div class="dashboard-toolbar">
+          <div class="location-header">
+            <div class="location-title-wrap">
+              <span class="location-marker" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </span>
+              <h2 id="cityName" class="city-name">City Name</h2>
+              <span id="countryBadge" class="country-badge">Country</span>
+            </div>
+            <div class="location-meta">
+              <span id="dayNightBadge" class="day-night-badge">
+                <span id="dayNightIcon">☀️</span> <span id="dayNightText">Day</span>
+              </span>
+              <span id="lastUpdated" class="last-updated">Updated: --:--</span>
+            </div>
+          </div>
+
+          <button type="button" id="refreshBtn" class="btn btn-secondary" title="Refresh weather data" aria-label="Refresh current weather data">
+            <svg id="refreshIcon" class="refresh-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+            </svg>
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <!-- Main Weather Highlight Card -->
+        <section class="current-weather-card" aria-label="Current Weather Conditions">
+          <div class="current-left">
+            <div class="weather-visual" id="currentWeatherIcon" aria-hidden="true">
+              <!-- Dynamically rendered weather icon SVG -->
+            </div>
+            <div class="condition-info">
+              <span id="weatherDescription" class="weather-description">Clear Sky</span>
+              <span class="feels-like">Feels like <strong id="feelsLikeTemp">--°C</strong></span>
+            </div>
+          </div>
+
+          <div class="current-right">
+            <div class="temp-display">
+              <span id="currentTemp" class="current-temp">--</span>
+              <span class="temp-unit">°C</span>
+            </div>
+            <div class="temp-minmax-summary">
+              <span>Today's Range:</span>
+              <span class="range-val"><span id="todayMin">--</span>° / <span id="todayMax">--</span>°</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Weather Metrics Grid -->
+        <section class="metrics-grid" aria-label="Weather Details">
+          <!-- Relative Humidity -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-icon humidity-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                </svg>
+              </span>
+              <span class="metric-label">Relative Humidity</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span id="humidityValue" class="metric-value">--</span>
+              <span class="metric-unit">%</span>
+            </div>
+            <p class="metric-desc">Moisture in the atmosphere</p>
+          </div>
+
+          <!-- Wind Speed -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-icon wind-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+                </svg>
+              </span>
+              <span class="metric-label">Wind Speed</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span id="windValue" class="metric-value">--</span>
+              <span class="metric-unit">km/h</span>
+            </div>
+            <p class="metric-desc">10-meter surface wind</p>
+          </div>
+
+          <!-- Precipitation -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-icon rain-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" y1="19" x2="8" y2="21"></line>
+                  <line x1="8" y1="13" x2="8" y2="15"></line>
+                  <line x1="16" y1="19" x2="16" y2="21"></line>
+                  <line x1="16" y1="13" x2="16" y2="15"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="12" y1="15" x2="12" y2="17"></line>
+                  <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"></path>
+                </svg>
+              </span>
+              <span class="metric-label">Precipitation</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span id="precipitationValue" class="metric-value">--</span>
+              <span class="metric-unit">mm</span>
+            </div>
+            <p class="metric-desc">Liquid equivalent rainfall</p>
+          </div>
+
+          <!-- Today's High & Low Range -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-icon temp-range-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                </svg>
+              </span>
+              <span class="metric-label">Today's Temperature</span>
+            </div>
+            <div class="metric-value-wrap">
+              <span class="temp-badge low">Min: <strong id="todayMinCard">--</strong>°C</span>
+              <span class="temp-badge high">Max: <strong id="todayMaxCard">--</strong>°C</span>
+            </div>
+            <p class="metric-desc">Daily thermal boundary</p>
+          </div>
+        </section>
+
+        <!-- 5-Day Upcoming Forecast Section -->
+        <section class="forecast-section" aria-label="Five-Day Forecast">
+          <div class="forecast-header">
+            <h3 class="forecast-title">5-Day Weather Forecast</h3>
+            <span class="forecast-subtitle">Expected conditions and temperature variation</span>
+          </div>
+
+          <div id="forecastGrid" class="forecast-grid">
+            <!-- Dynamically populated 5 daily forecast cards -->
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Data provided in real-time by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> API. Built for Academic Demonstration.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A clean, responsive To-Do List application with local storage persistence built with HTML5, CSS3, and Vanilla JavaScript.">
+  <title>My To-Do List</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-background"></div>
+
+  <main class="app-container" role="main">
+    <article class="todo-card" aria-label="To-Do List Management">
+      
+      <!-- Application Header -->
+      <header class="app-header">
+        <div class="header-icon-wrapper" aria-hidden="true">
+          <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+        </div>
+        <h1 class="app-title">My To-Do List</h1>
+        <p class="app-subtitle">Organize your day, one task at a time.</p>
+      </header>
+
+      <!-- Task Input Form Section -->
+      <section class="input-section" aria-label="Add new task">
+        <form class="task-form" id="taskForm" onsubmit="return false;">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="taskInput" 
+              class="task-input" 
+              placeholder="What needs to get done?" 
+              autocomplete="off"
+              maxlength="200"
+              aria-label="New task description"
+            >
+          </div>
+          <button type="submit" id="addTaskBtn" class="add-btn" aria-label="Add Task">
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span class="btn-text">Add Task</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Task Summary Counters Section -->
+      <section class="summary-section" aria-label="Task progress summary">
+        <div class="summary-card summary-total">
+          <span class="summary-label">Total</span>
+          <span class="summary-count" id="totalTasksCount">0</span>
+        </div>
+        <div class="summary-card summary-completed">
+          <span class="summary-label">Completed</span>
+          <span class="summary-count" id="completedTasksCount">0</span>
+        </div>
+        <div class="summary-card summary-remaining">
+          <span class="summary-label">Remaining</span>
+          <span class="summary-count" id="remainingTasksCount">0</span>
+        </div>
+      </section>
+
+      <!-- Task List Section -->
+      <section class="task-list-section" aria-label="Task list">
+        <!-- Dynamic Task List Container -->
+        <ul class="task-list" id="taskList" aria-label="Tasks">
+          <!-- Tasks will be injected dynamically via JavaScript -->
+        </ul>
+
+        <!-- Empty State (Shown when no tasks exist) -->
+        <div class="empty-state" id="emptyState" aria-live="polite">
+          <div class="empty-icon-wrapper" aria-hidden="true">
+            <svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M8 12l2.5 2.5L16 9"></path>
+            </svg>
+          </div>
+          <p class="empty-title">You're all caught up!</p>
+          <p class="empty-subtitle">Add a task to get started.</p>
+        </div>
+      </section>
+
+      <!-- Footer Note -->
+      <footer class="app-footer">
+        <p class="footer-note">Built with HTML, CSS &amp; JavaScript</p>
+      </footer>
+
+    </article>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

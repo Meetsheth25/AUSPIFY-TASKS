@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker | Personal Financial Ledger</title>
+  <meta name="description" content="A comprehensive, responsive expense tracker to manage income, expenses, and personal budgets with local storage persistence.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+              <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+              <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-title">FinTrack Ledger</h1>
+            <p class="brand-subtitle">Smart Income & Expense Management</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <span id="currentDateDisplay" class="current-date-badge"></span>
+          <button id="clearAllBtn" class="btn btn-secondary btn-sm" type="button" aria-label="Clear all transactions">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <span>Reset All Records</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Top Metrics Dashboard -->
+      <section class="dashboard-metrics" aria-label="Financial Summary Metrics">
+        <div class="metric-card metric-balance" id="metricCardBalance">
+          <div class="metric-header">
+            <span class="metric-label">Total Balance</span>
+            <span class="metric-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                <path d="M12 6v2"></path>
+                <path d="M12 16v2"></path>
+              </svg>
+            </span>
+          </div>
+          <div class="metric-value-wrapper">
+            <span id="totalBalance" class="metric-value">₹0.00</span>
+            <span id="balanceStatusBadge" class="status-badge status-neutral">Neutral</span>
+          </div>
+          <p class="metric-subtext">All-time net financial position</p>
+        </div>
+
+        <div class="metric-card metric-income">
+          <div class="metric-header">
+            <span class="metric-label">Total Income</span>
+            <span class="metric-icon icon-income" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                <polyline points="17 6 23 6 23 12"></polyline>
+              </svg>
+            </span>
+          </div>
+          <div class="metric-value-wrapper">
+            <span id="totalIncome" class="metric-value text-income">₹0.00</span>
+          </div>
+          <p class="metric-subtext"><span id="incomeCount">0</span> income credit(s)</p>
+        </div>
+
+        <div class="metric-card metric-expenses">
+          <div class="metric-header">
+            <span class="metric-label">Total Expenses</span>
+            <span class="metric-icon icon-expense" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                <polyline points="17 18 23 18 23 12"></polyline>
+              </svg>
+            </span>
+          </div>
+          <div class="metric-value-wrapper">
+            <span id="totalExpenses" class="metric-value text-expense">₹0.00</span>
+          </div>
+          <p class="metric-subtext"><span id="expenseCount">0</span> expense debit(s)</p>
+        </div>
+
+        <div class="metric-card metric-transactions">
+          <div class="metric-header">
+            <span class="metric-label">Total Transactions</span>
+            <span class="metric-icon icon-count" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </span>
+          </div>
+          <div class="metric-value-wrapper">
+            <span id="totalTransactions" class="metric-value">0</span>
+          </div>
+          <p class="metric-subtext">Verified ledger records</p>
+        </div>
+      </section>
+
+      <!-- App Two-Column Grid -->
+      <div class="content-grid">
+        <!-- Left Column: Form & Monthly Summary -->
+        <div class="grid-column column-left">
+          <!-- Transaction Form Card -->
+          <section class="card form-card" aria-labelledby="formHeading">
+            <div class="card-header">
+              <div class="header-with-badge">
+                <h2 id="formHeading" class="card-title">Add Transaction</h2>
+                <span id="editModeIndicator" class="mode-badge hidden">Editing Record</span>
+              </div>
+              <p class="card-description">Record your earnings and expenditures to maintain accurate balances.</p>
+            </div>
+
+            <form id="transactionForm" novalidate>
+              <input type="hidden" id="editTransactionId" value="">
+
+              <!-- Transaction Type Selector -->
+              <div class="form-group">
+                <label class="form-label" id="typeGroupLabel">Transaction Type <span class="required-asterisk">*</span></label>
+                <div class="segmented-control" role="radiogroup" aria-labelledby="typeGroupLabel">
+                  <label class="segmented-option">
+                    <input type="radio" name="transactionType" value="expense" checked id="typeExpense">
+                    <span class="segmented-box expense-box">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                      Expense
+                    </span>
+                  </label>
+                  <label class="segmented-option">
+                    <input type="radio" name="transactionType" value="income" id="typeIncome">
+                    <span class="segmented-box income-box">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      Income
+                    </span>
+                  </label>
+                </div>
+                <div id="typeError" class="field-error" role="alert" aria-live="assertive"></div>
+              </div>
+
+              <!-- Amount Input -->
+              <div class="form-group">
+                <label for="amountInput" class="form-label">Amount (₹) <span class="required-asterisk">*</span></label>
+                <div class="input-with-prefix">
+                  <span class="input-prefix" aria-hidden="true">₹</span>
+                  <input 
+                    type="number" 
+                    id="amountInput" 
+                    name="amount" 
+                    class="form-control" 
+                    placeholder="0.00" 
+                    step="0.01" 
+                    min="0.01" 
+                    required 
+                    aria-describedby="amountError"
+                  >
+                </div>
+                <div id="amountError" class="field-error" role="alert" aria-live="assertive"></div>
+              </div>
+
+              <!-- Description Input -->
+              <div class="form-group">
+                <label for="descriptionInput" class="form-label">Description <span class="required-asterisk">*</span></label>
+                <input 
+                  type="text" 
+                  id="descriptionInput" 
+                  name="description" 
+                  class="form-control" 
+                  placeholder="e.g. Monthly Grocery Restock" 
+                  maxlength="120" 
+                  required 
+                  aria-describedby="descriptionError"
+                >
+                <div id="descriptionError" class="field-error" role="alert" aria-live="assertive"></div>
+              </div>
+
+              <!-- Category & Date Row -->
+              <div class="form-row">
+                <div class="form-group form-col">
+                  <label for="categorySelect" class="form-label">Category <span class="required-asterisk">*</span></label>
+                  <select id="categorySelect" name="category" class="form-control" required aria-describedby="categoryError">
+                    <!-- Populated dynamically based on Expense or Income -->
+                  </select>
+                  <div id="categoryError" class="field-error" role="alert" aria-live="assertive"></div>
+                </div>
+
+                <div class="form-group form-col">
+                  <label for="dateInput" class="form-label">Date <span class="required-asterisk">*</span></label>
+                  <input 
+                    type="date" 
+                    id="dateInput" 
+                    name="date" 
+                    class="form-control" 
+                    required 
+                    aria-describedby="dateError"
+                  >
+                  <div id="dateError" class="field-error" role="alert" aria-live="assertive"></div>
+                </div>
+              </div>
+
+              <!-- Form Submit Actions -->
+              <div class="form-actions">
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-block">
+                  <svg id="submitIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <span id="submitBtnText">Add Transaction</span>
+                </button>
+                <button type="button" id="cancelEditBtn" class="btn btn-secondary btn-block hidden">
+                  Cancel Edit
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Monthly Summary & Category Breakdown -->
+          <section class="card summary-card" aria-labelledby="monthlySummaryHeading">
+            <div class="card-header summary-header">
+              <div>
+                <h2 id="monthlySummaryHeading" class="card-title">Monthly Expense Summary</h2>
+                <p class="card-description">Review budget health and category breakdown.</p>
+              </div>
+              <div class="month-selector-wrapper">
+                <label for="summaryMonthSelect" class="sr-only">Select Month</label>
+                <input type="month" id="summaryMonthSelect" class="form-control form-control-sm month-picker" aria-label="Select month for summary">
+              </div>
+            </div>
+
+            <!-- Month Quick Metrics -->
+            <div class="monthly-metrics-grid">
+              <div class="monthly-mini-card">
+                <span class="mini-label">Month Income</span>
+                <span id="monthIncome" class="mini-value text-income">₹0.00</span>
+              </div>
+              <div class="monthly-mini-card">
+                <span class="mini-label">Month Expenses</span>
+                <span id="monthExpenses" class="mini-value text-expense">₹0.00</span>
+              </div>
+              <div class="monthly-mini-card">
+                <span class="mini-label">Net Balance</span>
+                <span id="monthNetBalance" class="mini-value">₹0.00</span>
+              </div>
+            </div>
+
+            <!-- Category Breakdown List (Expenses Only) -->
+            <div class="category-breakdown-section">
+              <h3 class="breakdown-subtitle">Expenses by Category</h3>
+              <div id="categoryBreakdownContainer" class="category-breakdown-list" role="region" aria-live="polite">
+                <!-- Dynamically populated category bars -->
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right Column: Filters & Transaction History -->
+        <div class="grid-column column-right">
+          <section class="card history-card" aria-labelledby="historyHeading">
+            <div class="card-header history-header">
+              <div>
+                <h2 id="historyHeading" class="card-title">Transaction History</h2>
+                <p class="card-description">View, search, and manage all your historical ledger entries.</p>
+              </div>
+              <div class="history-badge">
+                <span id="matchingCountBadge">Showing 0 entries</span>
+              </div>
+            </div>
+
+            <!-- Search and Filter Toolbar -->
+            <div class="filter-toolbar" role="search" aria-label="Filter transactions">
+              <div class="search-box">
+                <span class="search-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  class="form-control search-input" 
+                  placeholder="Search description or category..." 
+                  aria-label="Search transactions"
+                >
+              </div>
+
+              <div class="filter-controls-row">
+                <div class="filter-item">
+                  <label for="filterTypeSelect" class="filter-label">Type</label>
+                  <select id="filterTypeSelect" class="form-control filter-select" aria-label="Filter by transaction type">
+                    <option value="all">All Types</option>
+                    <option value="income">Income Only</option>
+                    <option value="expense">Expense Only</option>
+                  </select>
+                </div>
+
+                <div class="filter-item">
+                  <label for="filterStartDate" class="filter-label">From</label>
+                  <input type="date" id="filterStartDate" class="form-control filter-date" aria-label="Filter from date">
+                </div>
+
+                <div class="filter-item">
+                  <label for="filterEndDate" class="filter-label">To</label>
+                  <input type="date" id="filterEndDate" class="form-control filter-date" aria-label="Filter to date">
+                </div>
+
+                <div class="filter-item filter-action-item">
+                  <button type="button" id="resetFiltersBtn" class="btn btn-secondary filter-reset-btn" title="Reset all search filters">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                      <path d="M3 3v5h5"></path>
+                    </svg>
+                    <span>Reset</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Transaction List Container -->
+            <div id="transactionListContainer" class="transaction-list-container" role="region" aria-live="polite">
+              <!-- Rendered via JS -->
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>© 2026 FinTrack Ledger · Task 5 Advanced Implementation · Built with HTML5, Vanilla CSS3 &amp; JavaScript</p>
+    </footer>
+  </div>
+
+  <!-- Reusable Accessible Confirmation Modal -->
+  <div id="confirmModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalMessage">
+    <div class="modal-box">
+      <div class="modal-icon-wrapper" id="modalIcon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h3 id="modalTitle" class="modal-title">Confirm Action</h3>
+      <p id="modalMessage" class="modal-message">Are you sure you want to proceed?</p>
+      <div class="modal-actions">
+        <button type="button" id="modalCancelBtn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="modalConfirmBtn" class="btn btn-danger">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accessible Toast Feedback Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

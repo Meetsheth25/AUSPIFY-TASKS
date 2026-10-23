@@ -1,0 +1,408 @@
+/* ==========================================================================
+   Digital Clock Application - Stylesheet
+   Modern, responsive, glassmorphic design with dark theme
+   ========================================================================== */
+
+/* --- CSS Variables & Design Tokens --- */
+:root {
+  /* Color Palette */
+  --bg-dark: #0a0e17;
+  --card-bg: rgba(16, 23, 39, 0.75);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-border-glow: rgba(56, 189, 248, 0.2);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --digit-color: #38bdf8;
+  --digit-glow: rgba(56, 189, 248, 0.35);
+  --colon-color: #0ea5e9;
+  
+  --accent-cyan: #06b6d4;
+  --accent-indigo: #6366f1;
+  --accent-emerald: #10b981;
+  
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+  
+  /* Dimensions & Spacing */
+  --card-radius: 24px;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+/* --- Base & Reset Styles --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+  position: relative;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(15, 23, 42, 1) 0%, rgba(10, 14, 23, 1) 100%);
+  background-attachment: fixed;
+}
+
+/* --- Ambient Glow Background Accents --- */
+.background-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+  animation: floatAmbient 12s ease-in-out infinite alternate;
+}
+
+.background-glow-1 {
+  width: 380px;
+  height: 380px;
+  top: 10%;
+  left: 15%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, rgba(99, 102, 241, 0) 70%);
+}
+
+.background-glow-2 {
+  width: 420px;
+  height: 420px;
+  bottom: 10%;
+  right: 15%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.35) 0%, rgba(6, 182, 212, 0) 70%);
+  animation-delay: -6s;
+}
+
+@keyframes floatAmbient {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(30px, 20px) scale(1.08);
+  }
+}
+
+/* --- Main Clock Container & Layout --- */
+.clock-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Glassmorphic Clock Card --- */
+.clock-card {
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: 
+    0 20px 45px -10px rgba(0, 0, 0, 0.6),
+    0 0 40px -15px var(--card-border-glow),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+  padding: clamp(1.75rem, 5vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+}
+
+.clock-card:hover {
+  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 
+    0 25px 55px -10px rgba(0, 0, 0, 0.7),
+    0 0 50px -10px rgba(56, 189, 248, 0.25),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* --- Card Header & Status Badge --- */
+.card-header {
+  margin-bottom: clamp(1.25rem, 3.5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.3rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent-emerald);
+  margin-bottom: 0.5rem;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-emerald);
+  box-shadow: 0 0 10px var(--accent-emerald);
+  position: relative;
+}
+
+.status-dot::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-emerald);
+  opacity: 0.7;
+  animation: pulsePing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulsePing {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.app-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-subtitle {
+  color: var(--text-secondary);
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  font-weight: 400;
+}
+
+/* --- Digital Clock Display Section --- */
+.clock-display-section {
+  width: 100%;
+  margin-bottom: clamp(1.25rem, 3.5vw, 2rem);
+  display: flex;
+  justify-content: center;
+}
+
+.time-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.4rem, 1.8vw, 1rem);
+  background: rgba(10, 14, 26, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: clamp(1rem, 3vw, 1.75rem) clamp(1rem, 3.5vw, 2.25rem);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 580px;
+}
+
+/* Individual Time Unit Box */
+.time-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: clamp(52px, 11vw, 84px);
+}
+
+.time-number {
+  font-family: var(--font-mono);
+  font-size: clamp(2.2rem, 6.5vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--digit-color);
+  text-shadow: 
+    0 0 15px var(--digit-glow),
+    0 0 30px rgba(56, 189, 248, 0.2);
+  /* Prevents horizontal layout shifts when digits change */
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  display: inline-block;
+  user-select: none;
+}
+
+.time-label {
+  font-size: clamp(0.55rem, 1.3vw, 0.7rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* Colon Separators */
+.time-colon {
+  font-family: var(--font-mono);
+  font-size: clamp(1.8rem, 5.5vw, 3.5rem);
+  font-weight: 700;
+  color: var(--colon-color);
+  line-height: 1;
+  margin-bottom: 1.25rem;
+  opacity: 0.85;
+  animation: blinkColon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  user-select: none;
+}
+
+@keyframes blinkColon {
+  0%, 100% {
+    opacity: 0.9;
+    text-shadow: 0 0 12px rgba(14, 165, 233, 0.5);
+  }
+  50% {
+    opacity: 0.3;
+    text-shadow: none;
+  }
+}
+
+/* AM/PM Indicator Badge */
+.ampm-unit {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  margin-left: clamp(0.2rem, 1vw, 0.6rem);
+}
+
+.ampm-badge {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(99, 102, 241, 0.25) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 2vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.7rem;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+  user-select: none;
+}
+
+/* --- Date Display Section --- */
+.date-section {
+  width: 100%;
+  margin-bottom: clamp(1.25rem, 3.5vw, 1.85rem);
+}
+
+.date-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.65rem 1.35rem;
+  border-radius: 9999px;
+}
+
+.calendar-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--accent-cyan);
+  flex-shrink: 0;
+}
+
+.date-text {
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+/* --- Card Footer --- */
+.card-footer {
+  width: 100%;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.footer-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* --- Responsive Media Queries --- */
+/* Small Mobile Devices (e.g., iPhone SE, narrow screens <= 420px) */
+@media (max-width: 420px) {
+  body {
+    padding: 0.75rem;
+  }
+
+  .clock-card {
+    padding: 1.5rem 1rem;
+    border-radius: 18px;
+  }
+
+  .time-display {
+    padding: 0.85rem 0.5rem;
+    gap: 0.25rem;
+  }
+
+  .time-unit {
+    min-width: 44px;
+  }
+
+  .time-label {
+    font-size: 0.52rem;
+    margin-top: 0.35rem;
+  }
+
+  .time-colon {
+    margin-bottom: 0.85rem;
+  }
+
+  .ampm-badge {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.75rem;
+  }
+
+  .date-wrapper {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Large Screens (Enhance clarity & glow) */
+@media (min-width: 1200px) {
+  .clock-card {
+    max-width: 760px;
+  }
+}
