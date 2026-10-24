@@ -25,53 +25,45 @@ All applications have been thoroughly tested and verified across modern browsers
 ```text
 M:\Mit\INTERNSHIP\MEET SHETH\
 ├── TASK 1/                          # Task 1: Digital Clock
-│   ├── index.html                   # Root redirect / launcher
-│   └── digital-clock/
-│       ├── index.html               # Main clock markup
-│       ├── style.css                # Glassmorphic layout, glowing neon theme
-│       ├── script.js                # Real-time Date API logic & interval updates
-│       └── README.md                # Task-specific documentation
+│   ├── index.html                   # Main clock markup
+│   ├── style.css                    # Glassmorphic layout, glowing neon theme
+│   ├── script.js                    # Real-time Date API logic & interval updates
+│   └── README.md                    # Task-specific documentation
 │
 ├── TASK 2/                          # Task 2: To-Do List Application
-│   └── todo-list/
-│       ├── index.html               # Semantic task list markup
-│       ├── style.css                # Clean productivity styling & responsive grid
-│       ├── script.js                # Task model, DOM manipulation & localStorage
-│       └── README.md                # Task-specific documentation
+│   ├── index.html                   # Semantic task list markup
+│   ├── style.css                    # Clean productivity styling & responsive grid
+│   ├── script.js                    # Task model, DOM manipulation & localStorage
+│   └── README.md                    # Task-specific documentation
 │
 ├── TASK 3/                          # Task 3: Weather Forecast Application
-│   ├── index.html                   # Root redirect / launcher
-│   ├── README.md                    # Root task documentation
-│   └── weather-forecast/
-│       ├── index.html               # Weather dashboard markup & SVG icons
-│       ├── style.css                # Atmospheric theme, card grids & animations
-│       ├── script.js                # Open-Meteo REST API client & 5-day forecast
-│       └── README.md                # Task-specific documentation
+│   ├── index.html                   # Weather dashboard markup & SVG icons
+│   ├── style.css                    # Atmospheric theme, card grids & animations
+│   ├── script.js                    # Open-Meteo REST API client & 5-day forecast
+│   └── README.md                    # Task-specific documentation
 │
 ├── TASK 4/                          # Task 4: Interactive Quiz Application
-│   ├── index.html                   # Root redirect / launcher
-│   ├── README.md                    # Root task documentation
-│   └── quiz-app/
-│       ├── index.html               # Quiz screens (Start, Quiz, Results)
-│       ├── style.css                # Dark modern gaming theme & progress gauges
-│       ├── script.js                # Timer engine, question bank & score tracker
-│       └── README.md                # Task-specific documentation
+│   ├── index.html                   # Quiz screens (Start, Quiz, Results)
+│   ├── style.css                    # Dark modern gaming theme & progress gauges
+│   ├── script.js                    # Timer engine, question bank & score tracker
+│   └── README.md                    # Task-specific documentation
 │
 ├── TASK 5/                          # Task 5: Expense Tracker (FinTrack Ledger)
 │   ├── index.html                   # Financial dashboard & transaction ledger
 │   ├── style.css                    # FinTech design system & proportional bars
 │   ├── script.js                    # State management, validation & integer paise math
 │   ├── test_suite.js                # Automated testing suite
-│   └── README.md                # Task-specific documentation
+│   └── README.md                    # Task-specific documentation
 │
 ├── TASK 6/                          # Task 6: E-Commerce Shopping Cart (Nexus Cart)
-│   ├── assets/products/             # 16 Custom SVG product illustrations
+│   ├── assets/                      # Application assets
+│   │   └── products/                # 16 Custom SVG product illustrations
 │   ├── index.html                   # E-commerce store, product grid & checkout
 │   ├── style.css                    # Premium dark store theme, drawer & badges
 │   ├── script.js                    # Cart state, coupons, tax/shipping & filtering
 │   ├── server.js                    # Lightweight local Node.js static server
 │   ├── test_suite.js                # Automated verification suite
-│   └── README.md                # Task-specific documentation
+│   └── README.md                    # Task-specific documentation
 │
 ├── screenshots/                     # Verified application state captures
 │   ├── task-1-digital-clock.png     # Live digital clock state
@@ -80,9 +72,10 @@ M:\Mit\INTERNSHIP\MEET SHETH\
 │   ├── task-4-quiz-app.png          # Active question screen with timer & feedback
 │   ├── task-4-quiz-results.png      # Final score and performance breakdown
 │   ├── task-5-expense-tracker.png   # Balance, income, expenses & ledger history
-│   ├── task-6-shopping-cart.png     # Cart drawer with items, coupon & totals
-│   └── task-6-product-catalog.png   # Full product grid with cart indicators
+│   ├── task-6-product-catalog.png   # Full product grid with cart indicators
+│   └── task-6-shopping-cart.png     # Cart drawer with items, coupon & totals
 │
+├── github repo link.txt             # GitHub repository reference URL
 └── README.md                        # Master internship submission documentation
 ```
 
@@ -91,8 +84,8 @@ M:\Mit\INTERNSHIP\MEET SHETH\
 ## Tasks Overview & Implemented Features
 
 ### 1. Task 1 — Digital Clock
-- **Location**: `TASK 1/digital-clock/`
-- **Entry Point**: `TASK 1/digital-clock/index.html` *(or root redirect `TASK 1/index.html`)*
+- **Location**: `TASK 1/`
+- **Entry Point**: `TASK 1/index.html`
 - **Key Features**:
   - Live local time using the native JavaScript `Date` API (`new Date()`).
   - Seamless 1-second interval refresh (`setInterval`) initialized immediately upon page load to eliminate display delay.
@@ -102,8 +95,8 @@ M:\Mit\INTERNSHIP\MEET SHETH\
   - Modern dark glassmorphic card design with subtle neon glows and pulsing live status badge.
 
 ### 2. Task 2 — To-Do List Application
-- **Location**: `TASK 2/todo-list/`
-- **Entry Point**: `TASK 2/todo-list/index.html`
+- **Location**: `TASK 2/`
+- **Entry Point**: `TASK 2/index.html`
 - **Key Features**:
   - Add tasks dynamically using either the **Add Task** button or the **Enter** key.
   - Mark tasks as completed or active with custom styled checkboxes and accessible states.
@@ -113,8 +106,8 @@ M:\Mit\INTERNSHIP\MEET SHETH\
   - Accessible empty state graphic when all tasks are cleared or completed.
 
 ### 3. Task 3 — Weather Forecast Application
-- **Location**: `TASK 3/weather-forecast/`
-- **Entry Point**: `TASK 3/weather-forecast/index.html` *(or root redirect `TASK 3/index.html`)*
+- **Location**: `TASK 3/`
+- **Entry Point**: `TASK 3/index.html`
 - **Key Features**:
   - Global city search with coordinate resolution via the **Open-Meteo Geocoding API**.
   - Current meteorological conditions via the **Open-Meteo Weather Forecast API** (zero API key required).
@@ -126,8 +119,8 @@ M:\Mit\INTERNSHIP\MEET SHETH\
   - Robust error handling for empty queries, unknown locations, network errors, and request race conditions.
 
 ### 4. Task 4 — Interactive Quiz Application
-- **Location**: `TASK 4/quiz-app/`
-- **Entry Point**: `TASK 4/quiz-app/index.html` *(or root redirect `TASK 4/index.html`)*
+- **Location**: `TASK 4/`
+- **Entry Point**: `TASK 4/index.html`
 - **Key Features**:
   - 10 structured multiple-choice questions across Science, Technology, and General Knowledge.
   - Real-time circular countdown timer (30 seconds per question) with animated SVG dash-offset and low-time warning indicator.
@@ -196,10 +189,10 @@ You can launch and explore any of the applications through either of the followi
    python -m http.server 8080
    ```
 3. Open your browser and navigate to any task:
-   - **Task 1 — Digital Clock**: [http://127.0.0.1:8080/TASK%201/digital-clock/](http://127.0.0.1:8080/TASK%201/digital-clock/)
-   - **Task 2 — To-Do List**: [http://127.0.0.1:8080/TASK%202/todo-list/](http://127.0.0.1:8080/TASK%202/todo-list/)
-   - **Task 3 — Weather Forecast**: [http://127.0.0.1:8080/TASK%203/weather-forecast/](http://127.0.0.1:8080/TASK%203/weather-forecast/)
-   - **Task 4 — Quiz Application**: [http://127.0.0.1:8080/TASK%204/quiz-app/](http://127.0.0.1:8080/TASK%204/quiz-app/)
+   - **Task 1 — Digital Clock**: [http://127.0.0.1:8080/TASK%201/](http://127.0.0.1:8080/TASK%201/)
+   - **Task 2 — To-Do List**: [http://127.0.0.1:8080/TASK%202/](http://127.0.0.1:8080/TASK%202/)
+   - **Task 3 — Weather Forecast**: [http://127.0.0.1:8080/TASK%203/](http://127.0.0.1:8080/TASK%203/)
+   - **Task 4 — Quiz Application**: [http://127.0.0.1:8080/TASK%204/](http://127.0.0.1:8080/TASK%204/)
    - **Task 5 — Expense Tracker**: [http://127.0.0.1:8080/TASK%205/](http://127.0.0.1:8080/TASK%205/)
    - **Task 6 — Shopping Cart**: [http://127.0.0.1:8080/TASK%206/](http://127.0.0.1:8080/TASK%206/)
 
