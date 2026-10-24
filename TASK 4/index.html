@@ -2,14 +2,207 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=./quiz-app/index.html">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task 4 - Quiz Application</title>
-  <script>
-    window.location.replace('./quiz-app/index.html');
-  </script>
+  <meta name="description" content="Interactive, responsive Quiz Application with a live countdown timer, multiple-choice questions, and detailed performance metrics.">
+  <title>Quiz Master - Interactive Knowledge Challenge</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body style="font-family: system-ui, sans-serif; background: #090d16; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
-  <p>Launching Quiz Application... If not redirected automatically, <a href="./quiz-app/index.html" style="color: #6366f1;">click here</a>.</p>
+<body>
+  <div class="app-background">
+    <div class="glow-orb orb-1" aria-hidden="true"></div>
+    <div class="glow-orb orb-2" aria-hidden="true"></div>
+    <div class="glow-orb orb-3" aria-hidden="true"></div>
+  </div>
+
+  <main class="quiz-container" id="quizContainer" role="main">
+    
+    <!-- 1. START / INTRO SCREEN -->
+    <section class="screen start-screen active" id="startScreen" aria-labelledby="startTitle">
+      <div class="brand-badge">
+        <span class="badge-dot" aria-hidden="true"></span>
+        <span>General Knowledge &bull; Science &bull; Tech</span>
+      </div>
+
+      <h1 id="startTitle" class="screen-title">Quiz Master Challenge</h1>
+      <p class="screen-subtitle">Test your intellect across 10 diverse multiple-choice questions. Race against the clock and claim your high score.</p>
+
+      <div class="rules-card">
+        <h2 class="rules-heading">Challenge Rules &amp; Guidelines</h2>
+        <ul class="rules-list">
+          <li>
+            <div class="rule-icon" aria-hidden="true">&#9201;</div>
+            <div class="rule-text">
+              <strong>30 Seconds Per Question:</strong> Timer begins immediately. Unanswered questions automatically advance at 0s.
+            </div>
+          </li>
+          <li>
+            <div class="rule-icon" aria-hidden="true">&#10003;</div>
+            <div class="rule-text">
+              <strong>1 Point Per Correct Answer:</strong> No penalty for wrong answers, but unanswered questions score 0 points.
+            </div>
+          </li>
+          <li>
+            <div class="rule-icon" aria-hidden="true">&#128274;</div>
+            <div class="rule-text">
+              <strong>Single Selection:</strong> Once you choose an option, it is locked in to prevent duplicate submissions.
+            </div>
+          </li>
+          <li>
+            <div class="rule-icon" aria-hidden="true">&#128202;</div>
+            <div class="rule-text">
+              <strong>Full Performance Breakdown:</strong> Complete summary with percentage, accuracy, and question review at the finish.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-large" id="startBtn" aria-label="Start Quiz Now">
+        <span>Start Quiz</span>
+        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </section>
+
+    <!-- 2. ACTIVE QUIZ SCREEN -->
+    <section class="screen quiz-screen" id="quizScreen" aria-labelledby="questionText" style="display: none;">
+      <!-- Progress Bar Header -->
+      <header class="quiz-header">
+        <div class="quiz-meta-row">
+          <div class="meta-left">
+            <span class="meta-label">Progress</span>
+            <span class="question-tracker" id="questionTracker">Question 1 of 10</span>
+          </div>
+          <div class="category-pill" id="categoryPill">Science</div>
+          <div class="score-pill" id="scorePill" aria-live="polite">Score: 0</div>
+        </div>
+
+        <div class="progress-track" role="progressbar" aria-label="Quiz completion progress" id="progressBarTrack" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill" id="progressFill" style="width: 10%;"></div>
+        </div>
+      </header>
+
+      <!-- Timer & Question Info -->
+      <div class="question-meta-bar">
+        <div class="topic-tag" id="topicTag">Topic: General Science</div>
+
+        <!-- Circular countdown timer -->
+        <div class="timer-wrapper" id="timerWrapper" aria-live="assertive" aria-label="Time remaining: 30 seconds">
+          <svg class="timer-svg" viewBox="0 0 80 80" aria-hidden="true">
+            <circle class="timer-circle-bg" cx="40" cy="40" r="34"></circle>
+            <circle class="timer-circle-progress" id="timerProgressCircle" cx="40" cy="40" r="34"></circle>
+          </svg>
+          <div class="timer-display">
+            <span class="timer-number" id="timerText">30</span>
+            <span class="timer-unit">s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <article class="question-card">
+        <h2 class="question-text" id="questionText">Loading question...</h2>
+
+        <div class="options-grid" id="optionsContainer" role="radiogroup" aria-label="Answer options">
+          <!-- Dynamically populated options -->
+        </div>
+
+        <!-- Feedback Alert Banner -->
+        <div class="feedback-banner" id="feedbackBanner" role="status" aria-live="polite" style="display: none;">
+          <span class="feedback-icon" id="feedbackIcon" aria-hidden="true"></span>
+          <span class="feedback-message" id="feedbackMessage"></span>
+        </div>
+      </article>
+
+      <!-- Navigation Footer -->
+      <footer class="quiz-footer">
+        <div class="footer-hint" id="footerHint">Select an option to lock in your answer</div>
+        <button type="button" class="btn btn-primary" id="nextBtn" disabled aria-label="Next Question">
+          <span id="nextBtnText">Next Question</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </footer>
+    </section>
+
+    <!-- 3. RESULTS SCREEN -->
+    <section class="screen results-screen" id="resultsScreen" aria-labelledby="resultsTitle" style="display: none;">
+      <div class="results-header">
+        <div class="trophy-badge" id="trophyBadge" aria-hidden="true">&#127942;</div>
+        <h1 id="resultsTitle" class="screen-title">Quiz Completed!</h1>
+        <p class="performance-message" id="performanceMessage">Great Job! You performed admirably.</p>
+      </div>
+
+      <!-- Score Hero Card -->
+      <div class="score-hero-card">
+        <div class="hero-score-ring">
+          <span class="hero-score-value" id="finalScoreDisplay">0/10</span>
+          <span class="hero-score-label">Final Score</span>
+        </div>
+        <div class="hero-percentage">
+          <span class="percentage-value" id="percentageDisplay">0%</span>
+          <span class="percentage-label">Accuracy Rate</span>
+        </div>
+      </div>
+
+      <!-- Metrics Summary Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card metric-correct">
+          <div class="metric-icon" aria-hidden="true">&#10004;</div>
+          <div class="metric-details">
+            <span class="metric-value" id="metricCorrect">0</span>
+            <span class="metric-label">Correct</span>
+          </div>
+        </div>
+        <div class="metric-card metric-incorrect">
+          <div class="metric-icon" aria-hidden="true">&#10006;</div>
+          <div class="metric-details">
+            <span class="metric-value" id="metricIncorrect">0</span>
+            <span class="metric-label">Incorrect</span>
+          </div>
+        </div>
+        <div class="metric-card metric-unanswered">
+          <div class="metric-icon" aria-hidden="true">&#9200;</div>
+          <div class="metric-details">
+            <span class="metric-value" id="metricUnanswered">0</span>
+            <span class="metric-label">Unanswered</span>
+          </div>
+        </div>
+        <div class="metric-card metric-total">
+          <div class="metric-icon" aria-hidden="true">&#128221;</div>
+          <div class="metric-details">
+            <span class="metric-value" id="metricTotal">10</span>
+            <span class="metric-label">Total Questions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Review Accordion -->
+      <div class="review-section">
+        <button type="button" class="review-toggle-btn" id="reviewToggleBtn" aria-expanded="false" aria-controls="reviewContainer">
+          <span>Review Questions &amp; Answers</span>
+          <svg class="toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="review-container" id="reviewContainer" style="display: none;">
+          <!-- Populated dynamically with question review items -->
+        </div>
+      </div>
+
+      <!-- Restart Action Button -->
+      <div class="results-actions">
+        <button type="button" class="btn btn-primary btn-large" id="restartBtn" aria-label="Restart Quiz">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          <span>Restart Quiz</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-credit">
+    <span>Quiz Application &bull; Task 4 &bull; AUSPIFY Internship</span>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
